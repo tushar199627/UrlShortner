@@ -9,9 +9,9 @@ const urlmodel = require("../model/urlmodel");
 
 exports.shortUrl = async function (req, res) {
   try {
-    let longUrl = req.body.longUrl;
-
-    if (!isValidRequestBody(longUrl)) {
+    let requestBody = req.body;
+    let {longUrl}=requestBody
+    if (!isValidRequestBody(requestBody)) {
       return res
         .status(400)
         .send({ status: false, msg: "input is not present" });
@@ -24,7 +24,7 @@ exports.shortUrl = async function (req, res) {
     if (!validUrl.test(longUrl)) {
       return res
         .status(400)
-        .send({ status: false, msg: "longUrl is required" });
+        .send({ status: false, msg: "longUrl is not valid" });
     }
 
     let baseUrl = "http://localhost:3000";

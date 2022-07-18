@@ -7,7 +7,7 @@ let isValid = function (value) {
 };
 
 let isValidRequestBody = function (requestBody) {
-  return Object.keys(requestBody).length != 0;
+  return Object.keys(requestBody).length > 0;
 };
 
 let validUrl =
