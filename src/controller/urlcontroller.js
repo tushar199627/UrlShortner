@@ -35,7 +35,7 @@ exports.shortUrl = async function (req, res) {
 
     let shortUrlCode = shortid.generate();
 
-    let alreadyExist = await urlmodel.findOne({ longUrl });
+    let alreadyExist = await urlmodel.findOne({ urlCode:shortUrlCode });
     if (alreadyExist) {
       return res.status(400).send({ status: false, msg: `url already exist` });
     }
@@ -75,7 +75,7 @@ exports.getUrl = async function (req, res) {
     if (!findUrlCode) {
       return res
         .status(404)
-        .send({ status: false, message: " url code NOT FOUND." });
+        .send({ status: false, message: " url code not found." });
     }
 
     return res.status(302).redirect(findUrlCode.longUrl);
