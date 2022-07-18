@@ -63,6 +63,7 @@ exports.shortUrl = async function (req, res) {
   }
 };
 
+
 exports.getUrl = async function (req, res) {
   try {
     let urlCode = req.params.urlCode;
