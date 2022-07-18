@@ -63,21 +63,22 @@ exports.shortUrl = async function (req, res) {
   }
 };
 
-
 exports.getUrl = async function (req, res) {
-    try {
-        let urlCode = req.params.urlCode;
+  try {
+    let urlCode = req.params.urlCode;
 
-        let findUrlCode = await urlModel.findOne({ urlCode: urlCode }).select({ urlCode: 1, longUrl: 1, shortUrl: 1 });
+    let findUrlCode = await urlModel
+      .findOne({ urlCode: urlCode })
+      .select({ urlCode: 1, longUrl: 1, shortUrl: 1 });
 
-            if (!findUrlCode) {
-                return res.status(404).send({ status: false, message: " url code NOT FOUND." });
-            }
-            
-            return res.status(302).redirect(findUrlCode.longUrl)
+    if (!findUrlCode) {
+      return res
+        .status(404)
+        .send({ status: false, message: " url code NOT FOUND." });
+    }
 
-        } catch (err) {
-            return res.status(500).send({ status: false, message: err.message })
-        }
-
-}
+    return res.status(302).redirect(findUrlCode.longUrl);
+  } catch (err) {
+    return res.status(500).send({ status: false, message: err.message });
+  }
+};
