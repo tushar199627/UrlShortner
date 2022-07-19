@@ -1,7 +1,7 @@
-
+const urlModel = require("../model/urlmodel");
 const shortid = require("shortid");
 const {isValid, isValidRequestBody, validUrl,} = require("../validation/validate");
-const urlmodel = require("../model/urlmodel");
+
 
 exports.shortUrl = async function (req, res) {
   try {
@@ -25,7 +25,7 @@ exports.shortUrl = async function (req, res) {
 
     let shortUrlCode = shortid.generate();
 
-    let alreadyExist = await urlmodel.findOne({ urlCode:shortUrlCode });
+    let alreadyExist = await urlModel.findOne({ urlCode:shortUrlCode });
     if (alreadyExist) {
       return res.status(400).send({ status: false, msg: `url already exist` });
     }
@@ -50,7 +50,9 @@ exports.getUrl = async function (req, res) {
     let findUrlCode = await urlModel.findOne({ urlCode: urlCode }).select({ urlCode: 1, longUrl: 1, shortUrl: 1 });
 
     if (!findUrlCode) {
-      return res.status(404) .send({ status: false, message: " url code NOT FOUND." });
+      return res
+        .status(404)
+        .send({ status: false, message: " url code not found." });
     }
 
     return res.status(302).redirect(findUrlCode.longUrl);
