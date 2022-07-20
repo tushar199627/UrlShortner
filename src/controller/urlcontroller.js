@@ -3,7 +3,7 @@ const shortid = require("shortid");
 const {
   isValid,
   isValidRequestBody,
-  validUrl,
+  isValidUrl
 } = require("../validation/validate");
 const urlmodel = require("../model/urlmodel");
 
@@ -21,7 +21,7 @@ exports.shortUrl = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "longUrl is required" });
     }
-    if (!validUrl.test(longUrl)) {
+    if (!isValidUrl(longUrl)) {
       return res
         .status(400)
         .send({ status: false, msg: "longUrl is not valid" });
@@ -29,7 +29,7 @@ exports.shortUrl = async function (req, res) {
 
     let baseUrl = "http://localhost:3000";
 
-    if (!validUrl.test(baseUrl)) {
+    if (!isValidUrl(baseUrl)) {
       return res.status(400).send({ status: false, msg: "url not valid" });
     }
 
@@ -48,16 +48,16 @@ exports.shortUrl = async function (req, res) {
       urlCode: shortUrlCode,
     };
 
-    let createdUrl = await urlModel.create(allUrl);
+    await urlModel.create(allUrl);
 
-    let urls = {
-      longUrl: createdUrl.longUrl,
-      shortUrl: createdUrl.shortUrl,
-      urlCode: shortUrlCode,
-    };
+    // let urls = {
+    //   longUrl: createdUrl.longUrl,
+    //   shortUrl: createdUrl.shortUrl,
+    //   urlCode: shortUrlCode,
+    // };
     return res
       .status(201)
-      .send({ status: true, message: "Short url created", data: urls });
+      .send({ status: true, message: "Short url created", data: allUrl });
   } catch (error) {
     res.status(500).send({ status: false, message: error.message });
   }
