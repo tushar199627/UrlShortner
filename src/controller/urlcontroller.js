@@ -3,7 +3,7 @@ const shortid = require("shortid");
 const {
   isValid,
   isValidRequestBody,
-  isValidUrl
+  validUrl,
 } = require("../validation/validate");
 
 const redis = require("redis"); //requiring redis using npm i redis@3.1.2
@@ -48,7 +48,7 @@ exports.shortUrl = async function (req, res) {
         .status(400)
         .send({ status: false, msg: "longUrl is required" });
     }
-    if (!isValidUrl(longUrl)) {
+    if (!validUrl.test(longUrl)) {
       return res
         .status(400)
         .send({ status: false, msg: "longUrl is not valid" });
@@ -100,8 +100,6 @@ exports.shortUrl = async function (req, res) {
     res.status(500).send({ status: false, message: error.message });
   }
 };
-
-//=====================================getUrl=============================================
 
 //get api to redirect to the long url with the urlcode
 exports.getUrl = async function (req, res) {
