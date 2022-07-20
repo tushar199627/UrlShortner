@@ -4,13 +4,14 @@ const route = require("./routes/route.js");
 const { default: mongoose } = require("mongoose");
 const app = express();
 
-
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-
-
-mongoose.connect("mongodb+srv://tusharbarai1:Tb88774411@cluster0.3hlrc.mongodb.net/group37Database",{ useNewUrlParser: true,})
+mongoose
+  .connect(
+    "mongodb+srv://tusharbarai1:Tb88774411@cluster0.3hlrc.mongodb.net/group37Database",
+    { useNewUrlParser: true }
+  )
   .then(() => console.log("MongoDb is connected"))
   .catch((err) => console.log(err));
 

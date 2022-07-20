@@ -1,4 +1,4 @@
-const urlModel = require("../model/urlmodel");
+const urlmodel = require("../model/urlmodel");
 const shortid = require("shortid");
 const {
   isValid,
@@ -6,8 +6,8 @@ const {
   validUrl,
 } = require("../validation/validate");
 
-const redis = require("redis");
-const { promisify } = require("util");
+const redis = require("redis"); //requiring redis using npm i redis@3.1.2
+const { promisify } = require("util"); //requiring util using npm i util
 
 //Connect to redis
 const redisClient = redis.createClient(
@@ -24,9 +24,7 @@ redisClient.on("connect", async function () {
   console.log("Connected to Redis..");
 });
 
-
 //Connection setup for redis
-
 const SET_ASYNC = promisify(redisClient.SET).bind(redisClient);
 const GET_ASYNC = promisify(redisClient.GET).bind(redisClient);
 
@@ -59,14 +57,15 @@ exports.shortUrl = async function (req, res) {
     let baseUrl = "http://localhost:3000"; //creating the base url
 
     if (!validUrl.test(baseUrl)) {
-      return res.status(400).send({ status: false, msg: "url not valid" }); //checkinh wheather the base url is valid url or not
+      return res.status(400).send({ status: false, msg: "url not valid" }); //checking wheather the base url is valid url or not
     }
 
     let shortUrlCode = shortid.generate(); //generating the shortid for the long url
 
     let cahcedUrlData = await GET_ASYNC(`${req.body.longUrl}`);
     if (cahcedUrlData) {
-      return res.status(200).send({ status: true, data: cahcedUrlData }); //it is basically cache hit
+      const urlData = JSON.parse(cahcedUrlData);
+      return res.status(200).send({ status: true, data: urlData }); //it is basically cache hit
     }
 
     let alreadyExist = await urlmodel.findOne({ urlCode: shortUrlCode });
@@ -84,7 +83,7 @@ exports.shortUrl = async function (req, res) {
       urlCode: shortUrlCode,
     };
 
-    let createdUrl = await urlModel.create(allUrl);
+    let createdUrl = await urlmodel.create(allUrl);
 
     let urls = {
       longUrl: createdUrl.longUrl,
@@ -102,8 +101,6 @@ exports.shortUrl = async function (req, res) {
   }
 };
 
-
-
 //get api to redirect to the long url with the urlcode
 exports.getUrl = async function (req, res) {
   try {
@@ -112,11 +109,12 @@ exports.getUrl = async function (req, res) {
     let cahcedUrlData = await GET_ASYNC(`${urlCode}`); //it is basically cache hit
 
     //converting to object
-    const urlData = JSON.parse(cahcedUrlData);
+
     if (cahcedUrlData) {
+      const urlData = JSON.parse(cahcedUrlData);
       return res.status(302).redirect(urlData.longUrl); //if data is present in the cache then directly redirect it from cache
     } else {
-      let findUrlCode = await urlModel
+      let findUrlCode = await urlmodel
         .findOne({ urlCode: urlCode })
         .select({ urlCode: 1, longUrl: 1, shortUrl: 1 }); //or take it from the db
 
