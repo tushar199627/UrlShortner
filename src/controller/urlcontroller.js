@@ -68,11 +68,11 @@ exports.shortUrl = async function (req, res) {
       return res.status(200).send({ status: true, data: urlData }); //it is basically cache hit
     }
 
-    let alreadyExist = await urlmodel.findOne({ urlCode: shortUrlCode });
+    let alreadyExist = await urlmodel.findOne({longUrl});
     if (alreadyExist) {
       return res
         .status(400)
-        .send({ status: false, msg: `${alreadyExist} already exist` }); //checking wheather the shorturlcode is present in the db or what, as the code should be unique
+        .send({ status: false, msg: `${longUrl} already exist` }); //checking wheather the shorturlcode is present in the db or what, as the code should be unique
     }
 
     let shortUrl = baseUrl + "/" + shortUrlCode; //concatenating the base url with the shortcode to create a short url
@@ -91,7 +91,7 @@ exports.shortUrl = async function (req, res) {
       urlCode: shortUrlCode,
     };
 
-    await SET_ASYNC(`${requestBody}`, JSON.stringify(urls)); //it is basically a cache miss, so we are setting up in the cache
+    await SET_ASYNC(`${longUrl}`, JSON.stringify(urls)); //it is basically a cache miss, so we are setting up in the cache
 
     return res
       .status(201)
