@@ -65,7 +65,7 @@ exports.shortUrl = async function (req, res) {
     let cahcedUrlData = await GET_ASYNC(`${req.body.longUrl}`);
     if (cahcedUrlData) {
       const urlData = JSON.parse(cahcedUrlData);
-      return res.status(201).send({ status: true, data: urlData }); //it is basically cache hit
+      return res.status(200).send({ status: true, data: urlData }); //it is basically cache hit
     }
 
     let alreadyExist = await urlmodel.findOne({longUrl});
